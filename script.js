@@ -1,86 +1,176 @@
-let productos = [
-    { id: 1, nombre : "Malbec MilDemonios", precio : 15000, tipo : "tinto", marca: "Malbec"},
-    { id: 2, nombre : "Malbec Luigi Bosca", precio : 14000, tipo : "tinto", marca: "Malbec"},
-    { id: 3, nombre : "Malbec El Enemigo", precio : 22000, tipo : "tinto", marca: "Malbec"},
-    { id: 4, nombre : "Malbec Los Nobles", precio : 15000, tipo : "tinto", marca: "Malbec"},
-    { id: 5, nombre : "Champagne Don Perignon", precio : 15000, tipo : "espumante", marca: "Dom Perignon"},
-    { id: 6, nombre : "Cafayate Reserva Torrontes Blanco", precio : 15000, tipo : "blanco", marca: "Cayafate"},
-]
+function principal(){
+    let productos = [
+        { id: 1, nombre : "Luigi Bosca Malbec D.O.C", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBMalbecDOC.jpg"},
+        { id: 2, nombre : "Luigi Bosca Malbec", precio : 22000, marca: "Luigi Bosca", rutaImagen: "LBM.jpg"},
+        { id: 3, nombre : "La Linda Malbec", precio : 15000, marca: "La Linda", rutaImagen: "LLM.jpeg"},
+        { id: 4, nombre : "Luigi Bosca Cabernet Sauvignon", precio : 14000, marca: "Luigi Bosca", rutaImagen: "LBC.jpg"},
+        { id: 5, nombre : "Luigi Bosca DE SANGRE Red Blend", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBRB.jpg"},
+        { id: 6, nombre : "Luigi Bosca Pinot Noir", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBPN.jpg"},
+        { id: 7, nombre : "La Linda Rose", precio : 15000, marca: "La Linda", rutaImagen: "LLR.jpg"},
+        { id: 8, nombre : "La Linda Sweet Viognier", precio : 14000, marca: "La Linda", rutaImagen: "LLS.jpg"},
+        { id: 9, nombre : "La Linda Torrontes", precio : 22000, marca: "La Linda", rutaImagen: "LLT.jpeg"},
+        { id: 10, nombre : "Luigi Bosca Extra Brut", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBEB.jpg"},
+        { id: 11, nombre : "Catena Zapata Malbec", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZM.jpg"},
+        { id: 12, nombre : "Catena Zapata Chardonnay", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZC.jpg"},
+        { id: 13, nombre : "Catena Zapata Cabernet Sauvignon", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZCS.jpg"},
+        { id: 14, nombre : "La Linda Malbec Organico", precio : 15000, marca: "La Linda", rutaImagen: "LLOM.png"},
+        { id: 15, nombre : "Catena Zapata White Bones", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZWB.jpg"},
+    ]
 
-let productosFiltrados = productos
-let carrito = []
-let opcion 
-let totalAPagar = 0
-
-
-do{
-    opcion = Number(prompt("0-Salir\n1-Agregar al carrito\n2-Filtrar por categoria\n3-Finalizar compra"))
-
-    if(opcion === 1){
-        let mensaje = "Seleccione producto por id:\n"
-        productosFiltrados.forEach(producto => mensaje += `${producto.id} - ${producto.nombre} - ${producto.precio}\n`)
-        let idProducto = parseInt(prompt(mensaje))
-        let cantidad = Number(prompt("Ingrese cantidad: "))
-
-        if(productosFiltrados.findIndex(producto => producto.id === idProducto) !== -1 && cantidad > 0){
-            carrito = actualizarCarrito(carrito, productosFiltrados, idProducto, cantidad)
-        }
-        else{
-            alert("Id no encontrado o cantidad invalida")
-        }
+    let carrito = JSON.parse(localStorage.getItem("carrito"))
+    if(!carrito){
+        carrito = []
     }
-    else if(opcion === 2){
-        let filtro = prompt("Todos\nTinto\nEspumante\nBlanco")
-        productosFiltrados = filtrar(productos, filtro)
-    }
-    else if(opcion === 3){
-        carrito.forEach(producto => totalAPagar += producto.precio * producto.unidades)
+    renderizarCarrito(carrito)
 
-        totalAPagar = aplicarDescuento(totalAPagar)
-        alert("El total a pagar es: " + totalAPagar.toLocaleString('es-AR', {style: 'currency', currency: 'ARS'}))
-        opcion = 0
-    }
-    else if(opcion !== 0){
-        alert("Metodo no valido")
-    }
-}while(opcion != 0)
+    crearTarjetasProductos(productos)
 
-function filtrar(productos, filtro){
-    if(productos.findIndex(producto => producto.tipo === filtro) !== -1){
-        productos = productos.filter(producto => producto.tipo === filtro)
-    }
-    else if(filtro.toLowerCase() !== "todos"){
-        alert("Filtro no valido")
-    }
-    return productos
+    agregarEventosALosProductos(productos, carrito)
+
+    let botonCarrito = document.getElementById("botonCarrito")
+    botonCarrito.addEventListener("click", verOcultarCarrito)
+
+    let inputBuscador = document.getElementById("inputBuscador")
+    inputBuscador.addEventListener("keyup", (e) => filtrarYRenderizar(e, productos))
+
+    let botonVaciarCarrito = document.getElementById("botonVaciarCarrito")
+    botonVaciarCarrito.addEventListener("click", (e) => vaciarCarrito(e, carrito))
+
+    let botonFinalizarCompra = document.getElementById("botonFinalizarCompra")
+    botonFinalizarCompra.addEventListener("click", (e) => finalizarCompra(e, carrito))
+
+    let botonLuigi = document.getElementById("botonLuigi")
+    botonLuigi.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "Luigi Bosca"))
+
+    let botonLaLinda = document.getElementById("botonLaLinda")
+    botonLaLinda.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "La Linda"))
+
+    let botonCatena = document.getElementById("botonCatena")
+    botonCatena.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "Catena Zapata"))
+
+    let botonTodos = document.getElementById("botonTodos")
+    botonTodos.addEventListener("click", (e) => crearTarjetasProductos(productos))
+
+
 }
 
-function actualizarCarrito(carrito, productos, idProducto, cantidad){
-    let productoPedido = productos.find(producto => producto.id === idProducto)
-    let productoEnCarrito = carrito.find(producto => producto.id === idProducto);
-    if(productoEnCarrito){
-        productoEnCarrito.unidades += cantidad;
+principal()
+
+//TRABAJAR STORAGE Y JSON
+
+//EVENTOS 
+
+//FUNCIONES
+
+function crearTarjetasProductos(productos){
+    let contenedor = document.getElementById("contenedorDeProductos")
+    contenedor.innerHTML = ""
+    productos.forEach(producto => {
+        let tarjetaProducto = document.createElement("div")
+        tarjetaProducto.className = "tarjetaVino"
+        tarjetaProducto.innerHTML = `
+            <img src=./imagenes/${producto.rutaImagen}>
+            <h3>${producto.nombre}</h3>
+            <p>${producto.precio}$</p>
+            <button class=botonesProductos id=${producto.id}>Agregar al carrito</button>
+        `        
+        contenedor.appendChild(tarjetaProducto)
+    })
+}
+
+function agregarEventosALosProductos(productos, carrito){
+    let botonesProductos = document.getElementsByClassName("botonesProductos")
+    for(const boton of botonesProductos){
+        boton.addEventListener("click", (e) => agregarProductoAlCarrito(e, productos, carrito)) 
     }
-    else{
+}
+
+function agregarProductoAlCarrito(e, productos, carrito){
+    let id = Number(e.target.id)
+    let productoOriginal = productos.find(producto => producto.id === id)
+    let indiceDelProductoEnCarrito = carrito.findIndex(producto => producto.id === id)
+    if(indiceDelProductoEnCarrito === -1){
         carrito.push({
-            id : productoPedido.id,
-            nombre : productoPedido.nombre,
-            precio : productoPedido.precio,
-            unidades : cantidad
-        })    
+            id: productoOriginal.id,
+            nombre: productoOriginal.nombre,
+            precioUnitario: productoOriginal.precio,
+            unidades: 1,
+            subtotal: productoOriginal.precio
+        })
+    }     
+    else{
+        carrito[indiceDelProductoEnCarrito].unidades++
+        carrito[indiceDelProductoEnCarrito].subtotal = carrito[indiceDelProductoEnCarrito].unidades * carrito[indiceDelProductoEnCarrito].precioUnitario
     }
-    return carrito
+    renderizarCarrito(carrito)
+    guardarEnStorage("carrito",carrito)
 }
 
-function aplicarDescuento(totalAPagar){
-    let metodo = Number(prompt("Metodo de pago\n1-Efectivo (20% de descuento)\n2-Mercado Pago (10% de descuento)\n3-Tarjeta de debito (10% de descuento)\n4-Tarjeta de credito"))
-    let descuento = 0
-        if(metodo === 1){
-            descuento = 20
-        }else if(metodo === 2){
-            descuento = 10
-        }else if(metodo === 3){
-            descuento = 10
-        }
-    return totalAPagar - (totalAPagar * descuento / 100)
+function verOcultarCarrito(e){
+    let carrito = document.getElementById("carrito")
+    let contenedorDeProductos = document.getElementById("contenedorDeProductos")
+    let buscador = document.getElementById("buscador")
+    let finalizarCompra = document.getElementById("finalizarCompra")
+
+    carrito.classList.toggle("oculta")  
+    contenedorDeProductos.classList.toggle("oculta")
+    buscador.classList.toggle("oculta")
+    finalizarCompra.classList.toggle("oculta")
+
+    if(e.target.innerText === "Carrito"){
+        e.target.innerText = "Productos"
+    } 
+    else{
+        e.target.innerText = "Carrito"
+    }
+}
+
+function renderizarCarrito(carrito){
+    let contenedorCarrito = document.getElementById("carrito")
+    contenedorCarrito.innerHTML = ""
+    carrito.forEach(producto => {
+        let tarjetaCarrito = document.createElement("div")
+        tarjetaCarrito.className = "tarjetaCarrito"
+        tarjetaCarrito.innerHTML = `
+            <p>${producto.nombre}</p>
+            <p>${producto.precioUnitario}</p>
+            <p>${producto.unidades}</p>
+            <p>${producto.subtotal}$</p>        
+        `
+        contenedorCarrito.appendChild(tarjetaCarrito)
+    })
+}
+
+function filtrarYRenderizar(e, productos){
+    let filtro = e.target.value
+    let productosFiltrados = productos.filter(producto => producto.nombre.toLowerCase().includes(filtro.toLowerCase()))
+    crearTarjetasProductos(productosFiltrados)
+}
+
+function guardarEnStorage(clave, valor){
+    let valorJson = JSON.stringify(valor)
+    localStorage.setItem(clave, valorJson)
+}
+
+function vaciarCarrito(e, carrito){
+    carrito.splice(0, carrito.length); //chatgpt
+    localStorage.removeItem("carrito")
+    renderizarCarrito(carrito)
+}
+
+function finalizarCompra(e, carrito){
+    let total = 0
+    carrito.forEach(producto => total += producto.subtotal)
+    alert(`Finalizaste tu compra por: ${total}$`)
+    carrito.splice(0, carrito.length); //chatgpt
+    localStorage.removeItem("carrito")
+    renderizarCarrito(carrito)
+}
+
+function filtrarPorCategoria(e, productos, categoria){
+    crearTarjetasProductos(filtroPorCategoria(productos, categoria))
+}
+
+function filtroPorCategoria(productos, categoria){
+    return productos.filter(producto => producto.marca === categoria)
 }

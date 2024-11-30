@@ -1,0 +1,267 @@
+.seccionProductos {
+    text-align: center;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;
+}
+
+.seccionProductos h1 {
+    font-size: 60px;
+    /* Tamaño grande para destacar el título */
+    font-weight: 700;
+    /* Negrita para un impacto visual */
+    color: #66001A;
+    /* Color rojo oscuro, elegante y relacionado con el vino */
+    text-align: center;
+    /* Centrado horizontal */
+    margin-top: 60px;
+    /* Espacio en la parte superior */
+    margin-bottom: 40px;
+    /* Espacio en la parte inferior */
+    text-transform: uppercase;
+    /* Todo en mayúsculas para darle protagonismo */
+    letter-spacing: 6px;
+    /* Mayor separación entre letras para una lectura más espaciosa */
+    font-family: 'Georgia', serif;
+    /* Fuente elegante y sofisticada */
+}
+
+#barra {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#buscador {
+    display: flex;
+    /* Distribuir los elementos dentro del buscador */
+    align-items: center;
+    /* Alineación vertical central */
+    gap: 10px;
+    /* Espaciado entre el input y los botones */
+}
+
+#buscador input {
+    width: 300px;
+    /* Ancho fijo del input */
+    padding: 10px;
+    /* Espaciado interno */
+    font-size: 16px;
+    /* Tamaño de texto */
+    border: 1px solid #ccc;
+    /* Borde suave */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    outline: none;
+    /* Sin borde al hacer foco */
+    transition: border-color 0.3s ease;
+    /* Transición suave para el borde */
+}
+
+#buscador input:focus {
+    border-color: #000;
+    /* Color del borde al enfocar */
+}
+
+#buscador button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#buscador button:hover {
+    background-color: #444;
+    transform: scale(1.05);
+}
+
+#botonCarrito {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#botonCarrito:hover {
+    background-color: #444;
+    transform: scale(1.05);
+}
+
+#contenedorDeProductos {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.tarjetaVino {
+    width: 230px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjetaVino:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tarjetaVino img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.tarjetaVino h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.tarjetaVino p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #555;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.tarjetaVino button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.tarjetaVino button:hover {
+    background-color: #444;
+    transform: scale(1.05);
+}
+
+.tarjetaVino button:active {
+    background-color: #222;
+    transform: scale(0.95);
+}
+
+.oculta {
+    display: none !important;
+}
+
+#carrito {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tarjetaCarrito {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#finalizarCompra{
+    width: 80%;
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+#finalizarCompra button{
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#finalizarCompra button:hover {
+    background-color: #444;
+    transform: scale(1.05);
+}
+
+footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+footer div {
+    margin: 10px;
+    padding: 10px;
+}
+
+footer div h3 {
+    margin: 10px;
+}
+
+footer div a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin: 10px;
+}
+
+footer div a:hover {
+    text-decoration: underline;
+}
+
+footer div img {
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+}
+
+footer .footer-seguinos a {
+    display: inline-block;
+}
