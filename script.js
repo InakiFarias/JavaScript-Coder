@@ -21,17 +21,15 @@ function principal(){
     if(!carrito){
         carrito = []
     }
-    renderizarCarrito(carrito)
+    renderizarCarrito(carrito)  
 
-    crearTarjetasProductos(productos)
-
-    agregarEventosALosProductos(productos, carrito)
+    crearTarjetasProductos(productos, carrito)
 
     let botonCarrito = document.getElementById("botonCarrito")
     botonCarrito.addEventListener("click", verOcultarCarrito)
 
     let inputBuscador = document.getElementById("inputBuscador")
-    inputBuscador.addEventListener("keyup", (e) => filtrarYRenderizar(e, productos))
+    inputBuscador.addEventListener("keyup", (e) => filtrarYRenderizar(e, productos, carrito))
 
     let botonVaciarCarrito = document.getElementById("botonVaciarCarrito")
     botonVaciarCarrito.addEventListener("click", (e) => vaciarCarrito(e, carrito))
@@ -40,16 +38,16 @@ function principal(){
     botonFinalizarCompra.addEventListener("click", (e) => finalizarCompra(e, carrito))
 
     let botonLuigi = document.getElementById("botonLuigi")
-    botonLuigi.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "Luigi Bosca"))
+    botonLuigi.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "Luigi Bosca", carrito))
 
     let botonLaLinda = document.getElementById("botonLaLinda")
-    botonLaLinda.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "La Linda"))
+    botonLaLinda.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "La Linda", carrito))
 
     let botonCatena = document.getElementById("botonCatena")
-    botonCatena.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "Catena Zapata"))
+    botonCatena.addEventListener("click", (e) => filtrarPorCategoria(e, productos, "Catena Zapata", carrito))
 
     let botonTodos = document.getElementById("botonTodos")
-    botonTodos.addEventListener("click", (e) => crearTarjetasProductos(productos))
+    botonTodos.addEventListener("click", (e) => crearTarjetasProductos(productos, carrito))
 
 
 }
@@ -62,7 +60,7 @@ principal()
 
 //FUNCIONES
 
-function crearTarjetasProductos(productos){
+function crearTarjetasProductos(productos, carrito){
     let contenedor = document.getElementById("contenedorDeProductos")
     contenedor.innerHTML = ""
     productos.forEach(producto => {
@@ -76,6 +74,7 @@ function crearTarjetasProductos(productos){
         `        
         contenedor.appendChild(tarjetaProducto)
     })
+    agregarEventosALosProductos(productos, carrito)
 }
 
 function agregarEventosALosProductos(productos, carrito){
@@ -106,6 +105,27 @@ function agregarProductoAlCarrito(e, productos, carrito){
     guardarEnStorage("carrito",carrito)
 }
 
+function renderizarCarrito(carrito){
+    let contenedorCarrito = document.getElementById("carrito")
+    contenedorCarrito.innerHTML = ""
+    carrito.forEach(producto => {
+        let tarjetaCarrito = document.createElement("div")
+        tarjetaCarrito.className = "tarjetaCarrito"
+        tarjetaCarrito.innerHTML = `
+            <p>${producto.nombre}</p>
+            <p>${producto.precioUnitario}</p>
+            <p>${producto.unidades}</p>
+            <p>${producto.subtotal}$</p>        
+        `
+        contenedorCarrito.appendChild(tarjetaCarrito)
+    })
+}
+
+function guardarEnStorage(clave, valor){
+    let valorJson = JSON.stringify(valor)
+    localStorage.setItem(clave, valorJson)
+}
+
 function verOcultarCarrito(e){
     let carrito = document.getElementById("carrito")
     let contenedorDeProductos = document.getElementById("contenedorDeProductos")
@@ -125,52 +145,29 @@ function verOcultarCarrito(e){
     }
 }
 
-function renderizarCarrito(carrito){
-    let contenedorCarrito = document.getElementById("carrito")
-    contenedorCarrito.innerHTML = ""
-    carrito.forEach(producto => {
-        let tarjetaCarrito = document.createElement("div")
-        tarjetaCarrito.className = "tarjetaCarrito"
-        tarjetaCarrito.innerHTML = `
-            <p>${producto.nombre}</p>
-            <p>${producto.precioUnitario}</p>
-            <p>${producto.unidades}</p>
-            <p>${producto.subtotal}$</p>        
-        `
-        contenedorCarrito.appendChild(tarjetaCarrito)
-    })
-}
 
-function filtrarYRenderizar(e, productos){
+function filtrarYRenderizar(e, productos, carrito){
     let filtro = e.target.value
     let productosFiltrados = productos.filter(producto => producto.nombre.toLowerCase().includes(filtro.toLowerCase()))
-    crearTarjetasProductos(productosFiltrados)
-}
-
-function guardarEnStorage(clave, valor){
-    let valorJson = JSON.stringify(valor)
-    localStorage.setItem(clave, valorJson)
+    crearTarjetasProductos(productosFiltrados, carrito)
 }
 
 function vaciarCarrito(e, carrito){
-    carrito.splice(0, carrito.length); //chatgpt
+    carrito.splice(0, carrito.length); 
     localStorage.removeItem("carrito")
     renderizarCarrito(carrito)
 }
 
 function finalizarCompra(e, carrito){
-    let total = 0
-    carrito.forEach(producto => total += producto.subtotal)
+    let total = carrito.reduce((sum, producto) => sum + producto.subtotal, 0);
     alert(`Finalizaste tu compra por: ${total}$`)
-    carrito.splice(0, carrito.length); //chatgpt
-    localStorage.removeItem("carrito")
-    renderizarCarrito(carrito)
+    vaciarCarrito(e, carrito)
 }
 
-function filtrarPorCategoria(e, productos, categoria){
-    crearTarjetasProductos(filtroPorCategoria(productos, categoria))
+function filtrarPorCategoria(e, productos, marca, carrito){
+    crearTarjetasProductos(filtroPorCategoria(productos, marca), carrito)
 }
 
-function filtroPorCategoria(productos, categoria){
-    return productos.filter(producto => producto.marca === categoria)
+function filtroPorCategoria(productos, marca){
+    return productos.filter(producto => producto.marca === marca)
 }
