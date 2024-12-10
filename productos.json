@@ -1,0 +1,107 @@
+[
+    {
+        "id": 1,
+        "nombre": "Luigi Bosca Malbec D.O.C",
+        "precio": 50000,
+        "marca": "Luigi Bosca",
+        "rutaImagen": "LBMalbecDOC.jpg"
+    },
+    {
+        "id": 2,
+        "nombre": "Luigi Bosca Malbec",
+        "precio": 10000,
+        "marca": "Luigi Bosca",
+        "rutaImagen": "LBM.jpg"
+    },
+    {
+        "id": 3,
+        "nombre": "La Linda Malbec",
+        "precio": 7000,
+        "marca": "La Linda",
+        "rutaImagen": "LLM.jpeg"
+    },
+    {
+        "id": 4,
+        "nombre": "Luigi Bosca Cabernet Sauvignon",
+        "precio": 9500,
+        "marca": "Luigi Bosca",
+        "rutaImagen": "LBC.jpg"
+    },
+    {
+        "id": 5,
+        "nombre": "Luigi Bosca DE SANGRE Red Blend",
+        "precio": 14000,
+        "marca": "Luigi Bosca",
+        "rutaImagen": "LBRB.jpg"
+    },
+    {
+        "id": 6,
+        "nombre": "Luigi Bosca Pinot Noir",
+        "precio": 15000,
+        "marca": "Luigi Bosca",
+        "rutaImagen": "LBPN.jpg"
+    },
+    {
+        "id": 7,
+        "nombre": "La Linda Rose",
+        "precio": 7000,
+        "marca": "La Linda",
+        "rutaImagen": "LLR.jpg"
+    },
+    {
+        "id": 8,
+        "nombre": "La Linda Sweet Viognier",
+        "precio": 10000,
+        "marca": "La Linda",
+        "rutaImagen": "LLS.jpg"
+    },
+    {
+        "id": 9,
+        "nombre": "La Linda Torrontes",
+        "precio": 7000,
+        "marca": "La Linda",
+        "rutaImagen": "LLT.jpeg"
+    },
+    {
+        "id": 10,
+        "nombre": "Luigi Bosca Extra Brut",
+        "precio": 13500,
+        "marca": "Luigi Bosca",
+        "rutaImagen": "LBEB.jpg"
+    },
+    {
+        "id": 11,
+        "nombre": "Catena Zapata Malbec",
+        "precio": 22000,
+        "marca": "Catena Zapata",
+        "rutaImagen": "CZM.jpg"
+    },
+    {
+        "id": 12,
+        "nombre": "Catena Zapata Chardonnay",
+        "precio": 22000,
+        "marca": "Catena Zapata",
+        "rutaImagen": "CZC.jpg"
+    },
+    {
+        "id": 13,
+        "nombre": "Catena Zapata Cabernet Sauvignon",
+        "precio": 9000,
+        "marca": "Catena Zapata",
+        "rutaImagen": "CZCS.jpg"
+    },
+    {
+        "id": 14,
+        "nombre": "La Linda Malbec Organico",
+        "precio": 11000,
+        "marca": "La Linda",
+        "rutaImagen": "LLOM.png"
+    },
+    {
+        "id": 15,
+        "nombre": "Catena Zapata White Bones",
+        "precio": 140000,
+        "marca": "Catena Zapata",
+        "rutaImagen": "CZWB.jpg"
+    }
+]

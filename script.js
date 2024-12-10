@@ -1,26 +1,25 @@
-function principal(){
-    let productos = [
-        { id: 1, nombre : "Luigi Bosca Malbec D.O.C", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBMalbecDOC.jpg"},
-        { id: 2, nombre : "Luigi Bosca Malbec", precio : 22000, marca: "Luigi Bosca", rutaImagen: "LBM.jpg"},
-        { id: 3, nombre : "La Linda Malbec", precio : 15000, marca: "La Linda", rutaImagen: "LLM.jpeg"},
-        { id: 4, nombre : "Luigi Bosca Cabernet Sauvignon", precio : 14000, marca: "Luigi Bosca", rutaImagen: "LBC.jpg"},
-        { id: 5, nombre : "Luigi Bosca DE SANGRE Red Blend", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBRB.jpg"},
-        { id: 6, nombre : "Luigi Bosca Pinot Noir", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBPN.jpg"},
-        { id: 7, nombre : "La Linda Rose", precio : 15000, marca: "La Linda", rutaImagen: "LLR.jpg"},
-        { id: 8, nombre : "La Linda Sweet Viognier", precio : 14000, marca: "La Linda", rutaImagen: "LLS.jpg"},
-        { id: 9, nombre : "La Linda Torrontes", precio : 22000, marca: "La Linda", rutaImagen: "LLT.jpeg"},
-        { id: 10, nombre : "Luigi Bosca Extra Brut", precio : 15000, marca: "Luigi Bosca", rutaImagen: "LBEB.jpg"},
-        { id: 11, nombre : "Catena Zapata Malbec", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZM.jpg"},
-        { id: 12, nombre : "Catena Zapata Chardonnay", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZC.jpg"},
-        { id: 13, nombre : "Catena Zapata Cabernet Sauvignon", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZCS.jpg"},
-        { id: 14, nombre : "La Linda Malbec Organico", precio : 15000, marca: "La Linda", rutaImagen: "LLOM.png"},
-        { id: 15, nombre : "Catena Zapata White Bones", precio : 15000, marca: "Catena Zapata", rutaImagen: "CZWB.jpg"},
-    ]
+pedirProductos()
+
+function pedirProductos(){
+    fetch('./productos.json')
+        .then(info => info.json())
+        .then(productos => cargarPagina(productos))
+        .catch(error => {
+            console.error(error)
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudieron cargar los productos. Inténtelo más tarde.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            })
+        })
+}
+
+function cargarPagina(productos){
+    
 
     let carrito = JSON.parse(localStorage.getItem("carrito"))
-    if(!carrito){
-        carrito = []
-    }
+    carrito = carrito || []
     renderizarCarrito(carrito)  
 
     crearTarjetasProductos(productos, carrito)
@@ -52,13 +51,7 @@ function principal(){
 
 }
 
-principal()
 
-//TRABAJAR STORAGE Y JSON
-
-//EVENTOS 
-
-//FUNCIONES
 
 function crearTarjetasProductos(productos, carrito){
     let contenedor = document.getElementById("contenedorDeProductos")
@@ -69,7 +62,7 @@ function crearTarjetasProductos(productos, carrito){
         tarjetaProducto.innerHTML = `
             <img src=./imagenes/${producto.rutaImagen}>
             <h3>${producto.nombre}</h3>
-            <p>${producto.precio}$</p>
+            <p>$${producto.precio.toLocaleString('es-AR')}</p>
             <button class=botonesProductos id=${producto.id}>Agregar al carrito</button>
         `        
         contenedor.appendChild(tarjetaProducto)
@@ -101,8 +94,16 @@ function agregarProductoAlCarrito(e, productos, carrito){
         carrito[indiceDelProductoEnCarrito].unidades++
         carrito[indiceDelProductoEnCarrito].subtotal = carrito[indiceDelProductoEnCarrito].unidades * carrito[indiceDelProductoEnCarrito].precioUnitario
     }
+    Swal.fire({
+        title: 'Producto agregado!',
+        text: `${productoOriginal.nombre} se ha añadido al carrito`,
+        showConfirmButton: false,
+        timer: 3000,
+        position: 'bottom-end',
+        toast: true
+    })
     renderizarCarrito(carrito)
-    guardarEnStorage("carrito",carrito)
+    guardarEnStorage(carrito)
 }
 
 function renderizarCarrito(carrito){
@@ -113,17 +114,36 @@ function renderizarCarrito(carrito){
         tarjetaCarrito.className = "tarjetaCarrito"
         tarjetaCarrito.innerHTML = `
             <p>${producto.nombre}</p>
-            <p>${producto.precioUnitario}</p>
+            <p>$${producto.precioUnitario.toLocaleString('es-AR')}</p> 
             <p>${producto.unidades}</p>
-            <p>${producto.subtotal}$</p>        
+            <p>$${producto.subtotal.toLocaleString('es-AR')}</p>  
+            <button id=${producto.id} class=botonCarrito>Eliminar</button>     
         `
         contenedorCarrito.appendChild(tarjetaCarrito)
     })
+    agregarEventosAlCarrito(carrito)
 }
 
-function guardarEnStorage(clave, valor){
+function agregarEventosAlCarrito(carrito){
+    let botonesCarrito = document.getElementsByClassName("botonCarrito")
+    for(const boton of botonesCarrito){
+        boton.addEventListener("click", (e) => eliminarDelCarrito(e, carrito))
+    }
+}
+
+function eliminarDelCarrito(e, carrito){
+    let idProductoEnCarrito = Number(e.target.id)
+    let indiceCarrito = carrito.findIndex(producto => producto.id === idProductoEnCarrito)
+    if (indiceCarrito !== -1) {
+        carrito.splice(indiceCarrito, 1)
+        e.target.parentElement.remove()
+    }
+    guardarEnStorage(carrito)
+}
+
+function guardarEnStorage(valor){
     let valorJson = JSON.stringify(valor)
-    localStorage.setItem(clave, valorJson)
+    localStorage.setItem("carrito", valorJson)
 }
 
 function verOcultarCarrito(e){
@@ -137,12 +157,8 @@ function verOcultarCarrito(e){
     buscador.classList.toggle("oculta")
     finalizarCompra.classList.toggle("oculta")
 
-    if(e.target.innerText === "Carrito"){
-        e.target.innerText = "Productos"
-    } 
-    else{
-        e.target.innerText = "Carrito"
-    }
+    e.target.innerText = e.target.innerText === "Carrito" ? "Productos" : "Carrito"
+
 }
 
 
@@ -153,15 +169,24 @@ function filtrarYRenderizar(e, productos, carrito){
 }
 
 function vaciarCarrito(e, carrito){
-    carrito.splice(0, carrito.length); 
-    localStorage.removeItem("carrito")
-    renderizarCarrito(carrito)
+    if(carrito.length > 0){
+        carrito.splice(0, carrito.length); 
+        localStorage.removeItem("carrito")
+        renderizarCarrito(carrito)
+    }
 }
 
 function finalizarCompra(e, carrito){
-    let total = carrito.reduce((sum, producto) => sum + producto.subtotal, 0);
-    alert(`Finalizaste tu compra por: ${total}$`)
-    vaciarCarrito(e, carrito)
+    if(carrito.length){
+        let total = carrito.reduce((sum, producto) => sum + producto.subtotal, 0);
+        Swal.fire({
+            title: 'Gracias por su compra!',
+            text: `Su pago por $${total.toLocaleString('es-AR')} ha sido realizado con éxito`,
+            icon: 'success',
+            confirmButtonText: 'Continuar'
+        })
+        vaciarCarrito(e, carrito)
+    }
 }
 
 function filtrarPorCategoria(e, productos, marca, carrito){
